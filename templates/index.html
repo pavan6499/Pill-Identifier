@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pill Identifier</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .drop-area {
+      border: 2px dashed #4b5563;
+      padding: 2rem;
+      background-color: #1f2937;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .drop-area.dragover {
+      background-color: #374151;
+      border-color: #10b981;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans relative min-h-screen pb-48">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-800 shadow-md">
+    <div class="flex items-center space-x-2">
+      <img src="/static/pill_logo.png" alt="Pill Logo" class="h-8">
+      <button onclick="showAboutModal()" class="text-2xl font-bold tracking-wide focus:outline-none hover:underline">
+        PILL IDENTIFIER
+      </button>
+    </div>
+    <div class="flex space-x-4">
+      <button onclick="showChartModal()" class="bg-purple-600 hover:bg-purple-700 transition duration-200 text-white px-4 py-2 rounded shadow"><b>Chart</b></button>
+      <button onclick="showTeamModal()" class="bg-purple-600 hover:bg-purple-700 transition duration-200 text-white px-4 py-2 rounded shadow"><b>Team</b></button>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="disclaimerModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded shadow-lg text-center max-w-md fade-in">
+      <h2 class="text-xl font-bold mb-2">Disclaimer</h2>
+      <p class="mb-4">This AI model might make mistakes. Always double-check the result.</p>
+      <button onclick="document.getElementById('disclaimerModal').style.display='none'" class="bg-red-600 px-4 py-2 rounded">Got it!</button>
+    </div>
+  </div>
+
+  <div id="teamModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded shadow-lg text-center max-w-md fade-in">
+      <h3 class="text-xl font-bold mb-6">The Team Members</h3>
+      <div class="space-y-4">
+        <div class="bg-gray-700 rounded p-4 shadow-md">
+          <h4 class="text-lg font-semibold">Pavan</h4>
+        </div>
+        <div class="bg-gray-700 rounded p-4 shadow-md">
+          <h4 class="text-lg font-semibold">Arshiya Khan</h4>
+        </div>
+        <div class="bg-gray-700 rounded p-4 shadow-md">
+          <h4 class="text-lg font-semibold">Halesh M S</h4>
+        </div>
+      </div>
+      <button onclick="document.getElementById('teamModal').classList.add('hidden')" class="mt-6 bg-red-600 px-4 py-2 rounded">Close</button>
+    </div>
+  </div>
+
+  <div id="chartModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-4 rounded shadow-lg text-center max-w-3xl fade-in">
+      <h3 class="text-xl font-bold mb-4">Pill Accuracy Chart</h3>
+      <img src="/static/chart.png" alt="Chart" class="w-full rounded mb-4">
+      <button onclick="document.getElementById('chartModal').classList.add('hidden')" class="bg-red-600 px-4 py-2 rounded">Close</button>
+    </div>
+  </div>
+
+  <div id="aboutModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded shadow-lg text-center max-w-md fade-in">
+      <h3 class="text-xl font-bold mb-4">About This Project</h3>
+      <p class="text-gray-300 mb-4">
+        The Pill Identifier uses deep learning to identify pills based on their images. 
+        It analyzes the pill's features and returns information including its name, dosage, use case, and potential side effects.
+        <br><br>
+        <strong>Note:</strong> This system is experimental and not a replacement for professional medical advice.
+      </p>
+      <button onclick="document.getElementById('aboutModal').classList.add('hidden')" class="bg-red-600 px-4 py-2 rounded">Close</button>
+    </div>
+  </div>
+
+  <!-- Camera Modal for AR Feature -->
+  <div id="cameraModal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
+    <div class="bg-gray-800 p-4 rounded shadow-lg text-center w-full max-w-xl fade-in">
+      <h3 class="text-xl font-bold mb-4">Capture Pill Image</h3>
+      <div class="relative">
+        <video id="video" class="w-full h-64 object-cover bg-black rounded" autoplay playsinline muted></video>
+        <canvas id="canvas" class="hidden w-full h-64 object-cover bg-black rounded"></canvas>
+      </div>
+      <div id="cameraStatus" class="text-yellow-400 text-sm my-2">Initializing camera...</div>
+      <div class="flex justify-center mt-4 space-x-4">
+        <button id="captureBtn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded shadow transition duration-200">Capture</button>
+        <button id="retakeBtn" class="hidden bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded shadow transition duration-200">Retake</button>
+        <button id="usePhotoBtn" class="hidden bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded shadow transition duration-200">Use Photo</button>
+        <button id="closeCameraBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded shadow transition duration-200">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="p-8 max-w-xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4"><b>Upload a pill image to identify the Pill:</b></h2>
+    
+    <div class="flex items-center space-x-4 mb-4">
+      <label for="file" class="cursor-pointer inline-block bg-purple-700 hover:bg-purple-800 px-4 py-2 rounded shadow transition duration-200">
+        Choose Image
+      </label>
+      <input type="file" id="file" accept="image/*" class="hidden">
+      <button onclick="uploadFile()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded shadow transition duration-200">Upload</button>
+      <button onclick="openCamera()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded shadow transition duration-200">AR Camera</button>
+    </div>
+
+    <div id="dropArea" class="drop-area mb-6">
+      <p>Drag and drop an image here</p>
+    </div>
+
+    <div id="result" class="mt-6 p-4 border border-gray-700 rounded hidden bg-gray-800 fade-in"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 px-6 py-4 text-sm text-gray-300 shadow-inner fade-in">
+    <p class="text-center">
+      <strong>About the Project:</strong>
+      The Pill Identifier is a deep learning-powered web app designed to recognize medications from pill images.
+      Simply upload an image of the pill, and the system will analyze and return the name, dosage, usage, and potential side effects.
+      Note: this system is experimental and should not be used as a substitute for professional advice.
+    </p>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function uploadFile() {
+      const fileInput = document.getElementById("file");
+      if (!fileInput.files.length) return;
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      fetch("/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => showResult(data));
+    }
+
+    function showResult(data) {
+      const resultDiv = document.getElementById("result");
+      const confidence = data.confidence !== undefined ? data.confidence : 0;
+      const confidenceBarColor = confidence >= 75 ? 'bg-green-500' :
+                                  confidence >= 50 ? 'bg-yellow-500' :
+                                  'bg-red-500';
+
+      let warning = "";
+      if (confidence < 50) {
+        warning = `<div class="mt-2 p-3 bg-yellow-700 text-yellow-100 rounded">
+          ⚠️ Confidence is below 50%. Please verify with a healthcare professional.
+        </div>`;
+      }
+
+      resultDiv.innerHTML = ` 
+        <h2 class="text-lg font-semibold">${data.name}</h2>
+        <div class="my-4">
+          <img src="${data.image_url}" alt="Uploaded Pill" class="w-32 h-32 object-contain rounded border border-gray-600 mx-auto" />
+        </div>
+        <p><strong>Dosage:</strong> ${data.dosage}</p>
+        <p><strong>Usage:</strong> ${data.usage}</p>
+        <p><strong>Side Effects:</strong> ${data.side_effects}</p>
+        <div class="mt-4">
+          <p class="mb-1"><strong>Confidence:</strong> ${confidence}%</p>
+          <div class="w-full bg-gray-700 rounded h-4 overflow-hidden">
+            <div class="${confidenceBarColor} h-full transition-all duration-500" style="width: ${confidence}%;"></div>
+          </div>
+        </div>
+        ${warning}
+      `;
+      resultDiv.classList.remove("hidden");
+    }
+
+    const dropArea = document.getElementById("dropArea");
+    dropArea.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropArea.classList.add("dragover");
+    });
+    dropArea.addEventListener("dragleave", () => {
+      dropArea.classList.remove("dragover");
+    });
+    dropArea.addEventListener("drop", (event) => {
+      event.preventDefault();
+      dropArea.classList.remove("dragover");
+
+      const file = event.dataTransfer.files[0];
+      document.getElementById("file").files = event.dataTransfer.files;
+      uploadFile();
+    });
+
+    function showTeamModal() {
+      document.getElementById("teamModal").classList.remove("hidden");
+    }
+
+    function showChartModal() {
+      document.getElementById("chartModal").classList.remove("hidden");
+    }
+
+    function showAboutModal() {
+      document.getElementById("aboutModal").classList.remove("hidden");
+    }
+
+    // AR Camera functionality
+    let stream;
+    let video;
+    let canvas;
+    let captureBtn;
+    let retakeBtn;
+    let usePhotoBtn;
+    let closeCameraBtn;
+    let cameraModal;
+    
+    // Initialize camera elements after DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      video = document.getElementById('video');
+      canvas = document.getElementById('canvas');
+      captureBtn = document.getElementById('captureBtn');
+      retakeBtn = document.getElementById('retakeBtn');
+      usePhotoBtn = document.getElementById('usePhotoBtn');
+      closeCameraBtn = document.getElementById('closeCameraBtn');
+      cameraModal = document.getElementById('cameraModal');
+    });
+    
+    async function openCamera() {
+      try {
+        // Make sure elements are initialized
+        if (!video) {
+          video = document.getElementById('video');
+          canvas = document.getElementById('canvas');
+          captureBtn = document.getElementById('captureBtn');
+          retakeBtn = document.getElementById('retakeBtn');
+          usePhotoBtn = document.getElementById('usePhotoBtn');
+          closeCameraBtn = document.getElementById('closeCameraBtn');
+          cameraModal = document.getElementById('cameraModal');
+        }
+        
+        // Reset all camera elements
+        document.getElementById('cameraStatus').textContent = "Initializing camera...";
+        video.srcObject = null;
+        
+        // Ensure any existing stream is stopped
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+        }
+        
+        cameraModal.classList.remove('hidden');
+        
+        // Request camera access with specific constraints
+        const constraints = { 
+          video: { 
+            facingMode: "environment",
+            width: { ideal: 1280 },
+            height: { ideal: 720 } 
+          }, 
+          audio: false 
+        };
+        
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        
+        // Set video source and play
+        video.srcObject = stream;
+        await video.play().catch(e => console.error("Error playing video:", e));
+        
+        // Update UI
+        video.classList.remove('hidden');
+        canvas.classList.add('hidden');
+        captureBtn.classList.remove('hidden');
+        retakeBtn.classList.add('hidden');
+        usePhotoBtn.classList.add('hidden');
+        
+        console.log("Camera initialized successfully");
+      } catch (err) {
+        console.error("Error accessing camera:", err);
+        document.getElementById('cameraStatus').textContent = "Camera error: " + err.message;
+        alert("Could not access camera. Please ensure you've granted camera permissions and that your device has a camera.");
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('captureBtn').addEventListener('click', captureImage);
+      document.getElementById('retakeBtn').addEventListener('click', retakeImage);
+      document.getElementById('usePhotoBtn').addEventListener('click', useImage);
+      document.getElementById('closeCameraBtn').addEventListener('click', closeCamera);
+    });
+    
+    function captureImage() {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      video.classList.add('hidden');
+      canvas.classList.remove('hidden');
+      captureBtn.classList.add('hidden');
+      retakeBtn.classList.remove('hidden');
+      usePhotoBtn.classList.remove('hidden');
+      
+      document.getElementById('cameraStatus').textContent = "Image captured! Use or retake?";
+    }
+
+    function retakeImage() {
+      video.classList.remove('hidden');
+      canvas.classList.add('hidden');
+      captureBtn.classList.remove('hidden');
+      retakeBtn.classList.add('hidden');
+      usePhotoBtn.classList.add('hidden');
+      
+      document.getElementById('cameraStatus').textContent = "Camera active";
+    }
+
+    function useImage() {
+      try {
+        canvas.toBlob(blob => {
+          const file = new File([blob], "pill-image.jpg", { type: "image/jpeg" });
+          
+          // Use FileList workaround for different browsers
+          if (window.DataTransfer) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById('file').files = dataTransfer.files;
+          } else {
+            // Fallback method for browsers that don't support DataTransfer
+            alert("Your browser doesn't fully support this feature. Please use the 'Choose Image' option instead.");
+            return;
+          }
+          
+          closeCamera();
+          uploadFile();
+        }, 'image/jpeg', 0.95);
+      } catch (err) {
+        console.error("Error processing image:", err);
+        alert("There was an error processing the image. Please try again.");
+      }
+    }
+
+    function closeCamera() {
+      // Hide the camera modal
+      cameraModal.classList.add('hidden');
+      
+      // Stop all tracks in the stream
+      if (stream) {
+        stream.getTracks().forEach(track => {
+          track.stop();
+          console.log("Track stopped:", track.kind);
+        });
+        stream = null;
+      }
+      
+      // Reset video source
+      if (video) {
+        video.srcObject = null;
+        video.load();
+      }
+      
+      // Reset status message
+      document.getElementById('cameraStatus').textContent = "Initializing camera...";
+      console.log("Camera closed successfully");
+    }
+    
+    // Update camera status when video starts playing
+    document.addEventListener('DOMContentLoaded', () => {
+      const videoElement = document.getElementById('video');
+      videoElement.addEventListener('playing', () => {
+        document.getElementById('cameraStatus').textContent = "Camera active";
+      });
+    });
+  </script>
+</body>
+</html>

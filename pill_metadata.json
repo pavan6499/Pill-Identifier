@@ -1,0 +1,140 @@
+{
+  "Amoxicillin": {
+    "name": "Amoxicillin",
+    "dosage": "500mg",
+    "usage": "Used to treat bacterial infections such as chest infections and dental abscesses.",
+    "side_effects": "Possible side effects include nausea and diarrhea."
+  },
+  "Apixaban": {
+    "name": "Apixaban",
+    "dosage": "2.5mg",
+    "usage": "Used to treat or prevent deep venous thrombosis and pulmonary embolism.",
+    "side_effects": "May cause longer bleeding time and increased bruising."
+  },
+  "Aprepitant": {
+    "name": "Aprepitant",
+    "dosage": "80 mg",
+    "usage": "Prevents nausea and vomiting after cancer chemotherapy",
+    "side_effects": "Common side effects include headache, fatigue, and constipation"
+  },
+  "Atomoxetine": {
+    "name": "Atomoxetine",
+    "dosage": "25mg",
+    "usage": "Works in the brain to increase attention and decrease restlessness in hyperactive individuals",
+    "side_effects": "Common side effects include upset stomach"
+  },
+  "Calcitriol": {
+    "name": "Calcitriol",
+    "dosage": "0.00025mg",
+    "usage": "Treats low calcium levels caused by kidney disease and regulates parathyroid levels",
+    "side_effects": "May cause restlessness, difficulty thinking clearly, loss of appetite, and nausea"
+  },
+  "Carvedilol": {
+    "name": "Carvedilol",
+    "dosage": "3.125mg",
+    "usage": "A beta blocker that slows down the heart rate and lowers blood pressure",
+    "side_effects": "Common side effects include dizziness, lightheadedness, and diarrhea"
+  },
+  "Celecoxib": {
+    "name": "Celecoxib",
+    "dosage": "200mg",
+    "usage": "A nonsteroidal anti-inflammatory drug (NSAID) used to treat pain and inflammation",
+    "side_effects": "May cause stomach pain, heartburn, vomiting, and black stools"
+  },
+  "Duloxetine": {
+    "name": "Duloxetine",
+    "dosage": "30mg",
+    "usage": "An antidepressant that increases serotonin and noradrenaline levels in the brain",
+    "side_effects": "May cause angle-closure glaucoma and other side effects"
+  },
+  "Eltrombopag": {
+    "name": "Eltrombopag",
+    "dosage": "25mg",
+    "usage": "Used to increase platelet count in people with certain conditions",
+    "side_effects": "May cause serious liver problems and other side effects"
+  },
+  "Metformin": {
+    "name": "Metformin",
+    "dosage": "500mg",
+    "usage": "Lowers blood sugar levels in diabetes patients",
+    "side_effects": "May cause general unwell feeling, fast or shallow breathing, and yellowing of eyes or skin"
+  },
+  "Montelukast": {
+    "name": "Montelukast",
+    "dosage": "10mg",
+    "usage": "Used to prevent wheezing and breathing difficulties caused by asthma",
+    "side_effects": "May cause difficulty breathing, rash, and flu-like symptoms"
+  },
+  "Mycophenolate": {
+    "name": "Mycophenolate",
+    "dosage": "250mg",
+    "usage": "Used to help prevent organ rejection after transplantation",
+    "side_effects": "May cause constipation, nausea, headache, and other side effects"
+  },
+  "Omeprazole": {
+    "name": "Omeprazole",
+    "dosage": "40mg",
+    "usage": "Reduces stomach acid and treats indigestion, heartburn, and acid reflux",
+    "side_effects": "Common side effect is headache, and it may cause stomach-related issues"
+  },
+  "Oseltamivir": {
+    "name": "Oseltamivir",
+    "dosage": "45mg",
+    "usage": "Used to treat influenza infections",
+    "side_effects": "May cause confusion, tremors, and unusual behavior"
+  },
+  "Pantoprazole": {
+    "name": "Pantoprazole",
+    "dosage": "40mg",
+    "usage": "Reduces stomach acid and treats heartburn and gastroesophageal reflux disease (GERD)",
+    "side_effects": "May cause infectious diarrhea, kidney problems, and skin reactions"
+  },
+  "Pitavastatin": {
+    "name": "Pitavastatin",
+    "dosage": "1mg",
+    "usage": "A statin that lowers cholesterol levels in the body",
+    "side_effects": "May cause dark urine, diarrhea, fever, and muscle problems"
+  },
+  "Prasugrel": {
+    "name": "Prasugrel",
+    "dosage": "10mg",
+    "usage": "Prevents platelets from forming clots that may cause heart attacks or strokes",
+    "side_effects": "Common side effects include blurred vision, dizziness, and headache"
+  },
+  "Prednisone": {
+    "name": "Prednisone",
+    "dosage": "5mg",
+    "usage": "Treats various conditions by reducing inflammation and suppressing the immune system",
+    "side_effects": "May cause nausea, vomiting, heartburn, and trouble sleeping"
+  },
+  "Ramipril": {
+    "name": "Ramipril",
+    "dosage": "5mg",
+    "usage": "Lowers blood pressure by relaxing blood vessels",
+    "side_effects": "May cause sudden swelling of face, arms, legs, lips, and throat"
+  },
+  "Saxagliptin": {
+    "name": "Saxagliptin",
+    "dosage": "5mg",
+    "usage": "Used to treat high blood sugar levels in patients with type 2 diabetes",
+    "side_effects": "May cause pancreatitis and other digestive issues"
+  },
+  "Sertraline": {
+    "name": "Sertraline",
+    "dosage": "25mg",
+    "usage": "An antidepressant that increases serotonin levels in the brain",
+    "side_effects": "Common side effects include nausea, changes in sleep patterns, and diarrhea"
+  },
+  "Sitagliptin": {
+    "name": "Sitagliptin",
+    "dosage": "50mg",
+    "usage": "Helps control blood sugar levels by increasing insulin release and reducing liver sugar production",
+    "side_effects": "May cause symptoms like fever, nausea, and loss of appetite"
+  },
+  "Tadalafil": {
+    "name": "Tadalafil",
+    "dosage": "5mg",
+    "usage": "Used to treat erectile dysfunction in men",
+    "side_effects": "May cause difficulty urinating and painful urination"
+  }
+}
